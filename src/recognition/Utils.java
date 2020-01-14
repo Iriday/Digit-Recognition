@@ -21,17 +21,16 @@ public class Utils {
         return input;
     }
 
-    // activation function
+    // activation functions
     public static double sigmoid(double val) {
         return 1.0 / (1.0 + Math.pow(Math.E, -val));
     }
 
-    // activation function
     public static double ReLU(double val) {
         return Math.max(0.0, val);
     }
 
-    public static double deltaRule(double learningRateCoefficient, double an, double o2Ideal, double o2) { //Δw(ai,aj)=η∗ai∗(a ideal j −aj)
-        return learningRateCoefficient * an * (o2Ideal - o2);
+    public static double deltaRule(double learningRateCoefficient, double neuron, double idealOutput, double actualOutput) { //Δw(ai,aj)=η∗ai∗(a ideal j −aj)
+        return learningRateCoefficient * neuron * (idealOutput - actualOutput);
     }
 }

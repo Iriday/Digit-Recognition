@@ -28,11 +28,11 @@ public class Main {
     }
 
     public static double[] processInputLayer(char[] inputLayer, double[][] weights, double bias, double[] outputLayer) {
-        int outputNeuron = 0;
+        double outputNeuron = 0.0;
 
         for (int row = 0; row < weights.length; row++) {
             for (int aw = 0; aw < weights[0].length; aw++) {
-                outputNeuron += weights[row][aw] * (inputLayer[aw] == 'X' || inputLayer[aw] == 'x' ? 1 : -1);
+                outputNeuron += weights[row][aw] * (inputLayer[aw] == 'X' || inputLayer[aw] == 'x' ? 1.0 : -1.0 /*0.0*/);
             }
             outputLayer[row] = outputNeuron + bias;
             outputNeuron = 0;
@@ -41,9 +41,9 @@ public class Main {
     }
 
     private double findResult(double[] outputLayer) {
-        double max = Double.MIN_VALUE;
+        double max = outputLayer[0];
         int result = 0;
-        for (int i = 0; i < outputLayer.length; i++) {
+        for (int i = 1; i < outputLayer.length; i++) {
             if (outputLayer[i] > max) {
                 max = outputLayer[i];
                 result = i;
@@ -70,9 +70,7 @@ public class Main {
         switch (input) {
             case "1":
                 NeuralNetwork neuralNetwork = new NeuralNetwork();
-                System.out.println("Learning...");
                 neuralNetwork.run();
-                System.out.println("Done! Saved to the file.");
                 input();
                 return;
             case "2":
