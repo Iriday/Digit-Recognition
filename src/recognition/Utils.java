@@ -6,13 +6,16 @@ public class Utils {
     private static final Random rand = new Random();
 
     public static double[][][] fillWithRandomGaussianValues(double[][][] input) {
-        int lengthI = input.length, lengthJ = input[0].length, lengthK = input[0][0].length;
+        for (double[][] data : input) {
+            fillWithRandomGaussianValues(data);
+        }
+        return input;
+    }
 
-        for (int i = 0; i < lengthI; i++) {
-            for (int j = 0; j < lengthJ; j++) {
-                for (int k = 0; k < lengthK; k++) {
-                    input[i][j][k] = rand.nextGaussian();
-                }
+    public static double[][] fillWithRandomGaussianValues(double[][] input) {
+        for (int i = 0; i < input.length; i++) {
+            for (int j = 0; j < input[0].length; j++) {
+                input[i][j] = rand.nextGaussian();
             }
         }
         return input;

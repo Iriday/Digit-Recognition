@@ -7,10 +7,10 @@ import java.io.InputStreamReader;
 public class Main {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    private final char[][] inputLayer = new char[5][3]; // firstLayer
-    private final double[] outputLayer = new double[10]; // secondLayer
+    private char[] inputLayer = new char[15]; // firstLayer
+    private double[] outputLayer = new double[10]; // secondLayer
 
-    private double[][][] weights;
+    private double[][] weights;
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         Main main = new Main();
@@ -20,29 +20,29 @@ public class Main {
     private void run() throws IOException, ClassNotFoundException {
         input();
 
-        weights = (double[][][]) SerializationUtils.deserializeObject(".\\data.txt");
+        weights = (double[][]) SerializationUtils.deserializeObject(".\\data.txt");
 
-        for (int i = 0; i < 10; i++) {
-            outputLayer[i] = processInputLayer(inputLayer, weights[i], 1);//Utils.sigmoid()
-        }
+        outputLayer = processInputLayer(inputLayer, weights, 1, outputLayer);//Utils.sigmoid()
+
         output(findResult(outputLayer));
     }
 
-    public static double processInputLayer(char[][] inputLayer, double[][] weights, double bias) {
+    public static double[] processInputLayer(char[] inputLayer, double[][] weights, double bias, double[] outputLayer) {
         int outputNeuron = 0;
 
-        for (int row = 0; row < inputLayer.length; row++) {
-            for (int aw = 0; aw < inputLayer[0].length; aw++) {
-                outputNeuron += weights[row][aw] * (inputLayer[row][aw] == 'X' ? 1 : -1);
+        for (int row = 0; row < weights.length; row++) {
+            for (int aw = 0; aw < weights[0].length; aw++) {
+                outputNeuron += weights[row][aw] * (inputLayer[aw] == 'X' || inputLayer[aw] == 'x' ? 1 : -1);
             }
+            outputLayer[row] = outputNeuron + bias;
+            outputNeuron = 0;
         }
-        return outputNeuron + bias;
+        return outputLayer;
     }
 
     private double findResult(double[] outputLayer) {
         double max = Double.MIN_VALUE;
         int result = 0;
-        //System.out.println(Arrays.toString(outputLayer));
         for (int i = 0; i < outputLayer.length; i++) {
             if (outputLayer[i] > max) {
                 max = outputLayer[i];
@@ -77,9 +77,11 @@ public class Main {
                 return;
             case "2":
                 System.out.println("Input grid:");
-                for (int i = 0; i < inputLayer.length; i++) {
-                    inputLayer[i] = reader.readLine().toCharArray();
+                StringBuilder builder = new StringBuilder(15);
+                for (int i = 0; i < 5; i++) {
+                    builder.append(reader.readLine());
                 }
+                inputLayer = builder.toString().toCharArray();
                 break;
             case "3":
                 System.exit(0);
