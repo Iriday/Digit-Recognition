@@ -7,10 +7,8 @@ import java.io.InputStreamReader;
 public class Main {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    private char[] inputLayer = new char[15]; // firstLayer
-    private double[] outputLayer = new double[10]; // secondLayer
-
-    private double[][] weights;
+    private final double[] testSample = new double[15]; //input layer
+    private double[] neuralNetworkResponse  = new double[10]; //output layer
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         Main main = new Main();
@@ -20,27 +18,13 @@ public class Main {
     private void run() throws IOException, ClassNotFoundException {
         input();
 
-        weights = (double[][]) SerializationUtils.deserializeObject(".\\data.txt");
+        NeuralNetwork neuralNetwork = (NeuralNetwork) SerializationUtils.deserializeObject(".\\data.txt");
+        neuralNetworkResponse = neuralNetwork.forwardPass(testSample);
 
-        outputLayer = processInputLayer(inputLayer, weights, 1, outputLayer);//Utils.sigmoid()
-
-        output(findResult(outputLayer));
+        output(max(neuralNetworkResponse));
     }
 
-    public static double[] processInputLayer(char[] inputLayer, double[][] weights, double bias, double[] outputLayer) {
-        double outputNeuron = 0.0;
-
-        for (int row = 0; row < weights.length; row++) {
-            for (int aw = 0; aw < weights[0].length; aw++) {
-                outputNeuron += weights[row][aw] * (inputLayer[aw] == 'X' || inputLayer[aw] == 'x' ? 1.0 : -1.0 /*0.0*/);
-            }
-            outputLayer[row] = outputNeuron + bias;
-            outputNeuron = 0;
-        }
-        return outputLayer;
-    }
-
-    private double findResult(double[] outputLayer) {
+    private double max(double[] outputLayer) { //result
         double max = outputLayer[0];
         int result = 0;
         for (int i = 1; i < outputLayer.length; i++) {
@@ -75,15 +59,32 @@ public class Main {
                 return;
             case "2":
                 System.out.println("Input grid:");
-                StringBuilder builder = new StringBuilder(15);
-                for (int i = 0; i < 5; i++) {
-                    builder.append(reader.readLine());
+                if (initializeTestSample() == false) {
+                    System.out.println("Invalid input, grid size should be 5x3");
+                    input();
                 }
-                inputLayer = builder.toString().toCharArray();
                 break;
             case "3":
                 System.exit(0);
         }
+    }
+
+    private boolean initializeTestSample() throws IOException {
+        String inputLine;
+        int testSampleIndex = 0;
+
+        for (int i = 0; i < 5; i++) {
+            inputLine = reader.readLine();
+
+            if (inputLine.length() != 3) {
+                return false;
+            } else {
+                for (int j = 0; j < inputLine.length(); j++) {
+                    testSample[testSampleIndex++] = inputLine.charAt(j) == 'X' || inputLine.charAt(j) == 'x' ? 1.0 : 0.0/*-1.0*/;
+                }
+            }
+        }
+        return true;
     }
 
     private void output(double result) {

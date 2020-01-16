@@ -1,14 +1,15 @@
 package recognition;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import static recognition.TrainingData.trainingInputNumbersGrid5x3;
 import static recognition.TrainingData.trainingOutputNumbersGrid5x3;
 
-public class NeuralNetwork {
+public class NeuralNetwork implements Serializable {
     private static final double learningRateCoefficient = 0.5;//n
-
     private int generation = 1;
+
     private double[] inputNeurons = new double[15];
     private double[] outputNeurons = new double[10];
     private double[][] weights = new double[10][15];
@@ -31,16 +32,18 @@ public class NeuralNetwork {
             generation++;
             temp = new double[weights.length][weights[0].length];
         }
-        SerializationUtils.serializeObject(weights, ".\\data.txt");
+        SerializationUtils.serializeObject(this, ".\\data.txt");
 
         System.out.println("Done! Saved to the file.");
     }
 
-    private void forwardPass(double[] trainingInputSample) {
+    public double[] forwardPass(double[] trainingInputSample) {
         //input layer
         inputNeurons = trainingInputSample;
         //output layer
         activateNextLayerNeurons(inputNeurons, weights, outputNeurons, bias);
+
+        return outputNeurons;
     }
 
     private void activateNextLayerNeurons(double[] previousLayerNeurons, double[][] weightsBetweenLayers, double[] nextLayerNeurons, double bias) {
@@ -70,13 +73,11 @@ public class NeuralNetwork {
         }
     }
 
-    private double[][] updateWeights(double[][] weights, double[][] means) {
-
+    private void updateWeights(double[][] weights, double[][] means) {
         for (int i = 0; i < weights.length; i++) {
             for (int j = 0; j < weights[0].length; j++) {
                 weights[i][j] += means[i][j];
             }
         }
-        return weights;
     }
 }
