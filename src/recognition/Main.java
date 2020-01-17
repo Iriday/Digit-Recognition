@@ -79,7 +79,7 @@ public class Main {
         return true;
     }
 
-    private void output(double result) {
-        System.out.println("This number is " + (int) result);
+    private void output(int result) {
+        System.out.println("This number is " + result);
     }
 }

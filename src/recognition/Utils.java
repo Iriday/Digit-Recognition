@@ -21,7 +21,7 @@ public class Utils {
         return input;
     }
 
-    public static double max(double[] outputLayer) { //result
+    public static int max(double[] outputLayer) { //result
         double max = outputLayer[0];
         int result = 0;
         for (int i = 1; i < outputLayer.length; i++) {

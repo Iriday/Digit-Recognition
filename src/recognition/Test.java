@@ -8,8 +8,8 @@ public class Test {
         NeuralNetwork neuralNetwork = (NeuralNetwork) SerializationUtils.deserializeObject(".\\data.txt");
 
         double[] networkResponse; //output layer
-        double expectedOutputMax;
-        double actualOutputMax;
+        int expectedOutputMax;
+        int actualOutputMax;
 
         for (int testSample = 0; testSample < inputTest.length; testSample++) {
             networkResponse = neuralNetwork.forwardPass(inputTest[testSample]);
