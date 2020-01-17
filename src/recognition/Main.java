@@ -8,7 +8,7 @@ public class Main {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     private final double[] testSample = new double[15]; //input layer
-    private double[] neuralNetworkResponse  = new double[10]; //output layer
+    private double[] neuralNetworkResponse = new double[10]; //output layer
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         Main main = new Main();
@@ -21,19 +21,7 @@ public class Main {
         NeuralNetwork neuralNetwork = (NeuralNetwork) SerializationUtils.deserializeObject(".\\data.txt");
         neuralNetworkResponse = neuralNetwork.forwardPass(testSample);
 
-        output(max(neuralNetworkResponse));
-    }
-
-    private double max(double[] outputLayer) { //result
-        double max = outputLayer[0];
-        int result = 0;
-        for (int i = 1; i < outputLayer.length; i++) {
-            if (outputLayer[i] > max) {
-                max = outputLayer[i];
-                result = i;
-            }
-        }
-        return result;
+        output(Utils.max(neuralNetworkResponse));
     }
 
     private void input() throws IOException {

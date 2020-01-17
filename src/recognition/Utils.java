@@ -21,6 +21,18 @@ public class Utils {
         return input;
     }
 
+    public static double max(double[] outputLayer) { //result
+        double max = outputLayer[0];
+        int result = 0;
+        for (int i = 1; i < outputLayer.length; i++) {
+            if (outputLayer[i] > max) {
+                max = outputLayer[i];
+                result = i;
+            }
+        }
+        return result;
+    }
+
     // activation functions
     public static double sigmoid(double val) {
         return 1.0 / (1.0 + Math.pow(Math.E, -val));
