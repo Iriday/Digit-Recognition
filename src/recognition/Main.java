@@ -24,14 +24,14 @@ public class Main {
         output(Utils.max(neuralNetworkResponse));
     }
 
-    private void input() throws IOException {
+    private void input() throws IOException, ClassNotFoundException {
         String input;
 
         while (true) {
             System.out.println("1. Learn the network");
             System.out.println("2. Guess a number");
             input = reader.readLine();
-            if (!(input.equals("1") || input.equals("2") || input.equals("3"))) {
+            if (!(input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4"))) {
                 System.out.println("Incorrect input, try again");
             } else {
                 break;
@@ -53,6 +53,10 @@ public class Main {
                 }
                 break;
             case "3":
+                Test.run(TrainingData.trainingInputNumbersGrid5x3, TrainingData.trainingOutputNumbersGrid5x3);
+                input();
+                break;
+            case "4":
                 System.exit(0);
         }
     }
