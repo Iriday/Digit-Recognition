@@ -53,7 +53,10 @@ public class Main {
                 }
                 break;
             case "3":
+                System.out.println("Starting main test");
                 Test.run(TrainingData.trainingInputNumbersGrid5x3, TrainingData.trainingOutputNumbersGrid5x3);
+                System.out.println("Starting additional test");
+                Test.run(Test.inputTest2_NumbersGrid5x3, TrainingData.trainingOutputNumbersGrid5x3);
                 input();
                 break;
             case "4":
