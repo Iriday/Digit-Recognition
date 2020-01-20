@@ -3,6 +3,9 @@ package recognition;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -41,7 +44,10 @@ public class Main {
 
         switch (input) {
             case "1":
-                NeuralNetwork neuralNetwork = new NeuralNetwork();
+                System.out.print("Enter the sizes of the layers: ");
+                List<Integer> sizes = Arrays.stream(reader.readLine().split("\\s+")).map(Integer::parseInt).collect(Collectors.toList());
+                System.out.println();
+                NeuralNetwork neuralNetwork = new NeuralNetwork(15, sizes.get(1), sizes.get(2), 10, TrainingData.trainingInputNumbersGrid5x3, TrainingData.trainingOutputNumbersGrid5x3);
                 neuralNetwork.run();
                 input();
                 return;
