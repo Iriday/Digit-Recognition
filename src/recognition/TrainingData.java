@@ -1,8 +1,10 @@
 package recognition;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TrainingData {
     public static final double[][] trainingInputNumbersGrid5x3 = {
@@ -29,19 +31,22 @@ public class TrainingData {
             {0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 1}};
 
-    public static double[][] fromDirectory(String directoryPath, int layerSize) throws FileNotFoundException {
-        Scanner scn;
+    public static double[][] fromDirectory(String directoryPath, int layerSize) throws IOException {
         File directory = new File(directoryPath);
         File[] files = directory.listFiles();
         double[][] trainingData = new double[files.length][layerSize];
 
+        Pattern numberPattern = Pattern.compile("\\d+\\.\\d+|\\d+");
+        Matcher matcher;
+
         for (int i = 0; i < files.length; i++) {
-            scn = new Scanner(files[i]);
-            int index = 0;
-            while (index < layerSize) {
-                trainingData[i][index++] = scn.nextDouble();
+            String fileData = Files.readString(files[i].toPath());
+            matcher = numberPattern.matcher(fileData);
+            int neuronIndex = 0;
+
+            while (matcher.find()) {
+                trainingData[i][neuronIndex++] = Double.parseDouble(matcher.group());
             }
-            scn.close();
         }
         return trainingData;
     }
