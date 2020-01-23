@@ -1,18 +1,19 @@
 package recognition;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 public class NeuralNetwork implements Serializable {
     private static final double learningRateCoefficient = 0.5;//n
     private int generation = 1;
-    private final int inputLayerSize, hiddenOneLayerSize, hiddenTwoLayerSize, outputLayerSize;              //layers sizes
+    private final int inputLayerSize, hiddenOneLayerSize, hiddenTwoLayerSize, outputLayerSize;                        //layers sizes
 
-    private final double[][] trainingInput, trainingOutput;                                                 //training data
-    private double[] neuronsInputLayer, neuronsHiddenOneLayer, neuronsHiddenTwoLayer, neuronsOutputLayer;   //layers
-    private final double[][] weightsInToHidOne, weightsHidOneToHidTwo, weightsHidTwoToOut;                  //weights
-    private double[][] weightsChangesInToHidOne, weightsChangesHidOneToHidTwo, weightsChangesHidTwoToOut;   //weightsChanges
-    private double[] deltasHiddenOneLayer, deltasHiddenTwoLayer, deltasOutputLayer;                         //deltas
+    private transient final double[][] trainingInput, trainingOutput;                                                 //training data
+    private transient double[] neuronsInputLayer, neuronsHiddenOneLayer, neuronsHiddenTwoLayer, neuronsOutputLayer;   //layers
+    private final double[][] weightsInToHidOne, weightsHidOneToHidTwo, weightsHidTwoToOut;                            //weights
+    private transient double[][] weightsChangesInToHidOne, weightsChangesHidOneToHidTwo, weightsChangesHidTwoToOut;   //weightsChanges
+    private transient double[] deltasHiddenOneLayer, deltasHiddenTwoLayer, deltasOutputLayer;                         //deltas
     private final double bias = 1;
 
     public NeuralNetwork(int inputLayerSize, int hiddenOneLayerSize, int hiddenTwoLayerSize, int outputLayerSize, double[][] trainingInput, double[][] trainingOutput) {
@@ -23,13 +24,18 @@ public class NeuralNetwork implements Serializable {
         this.trainingInput = trainingInput;
         this.trainingOutput = trainingOutput;
 
+        weightsInToHidOne = new double[hiddenOneLayerSize][inputLayerSize];
+        weightsHidOneToHidTwo = new double[hiddenTwoLayerSize][hiddenOneLayerSize];
+        weightsHidTwoToOut = new double[outputLayerSize][hiddenTwoLayerSize];
+
+        initialize();
+    }
+
+    private void initialize() { //not serializable
         neuronsInputLayer = new double[inputLayerSize];
         neuronsHiddenOneLayer = new double[hiddenOneLayerSize];
         neuronsHiddenTwoLayer = new double[hiddenTwoLayerSize];
         neuronsOutputLayer = new double[outputLayerSize];
-        weightsInToHidOne = new double[hiddenOneLayerSize][inputLayerSize];
-        weightsHidOneToHidTwo = new double[hiddenTwoLayerSize][hiddenOneLayerSize];
-        weightsHidTwoToOut = new double[outputLayerSize][hiddenTwoLayerSize];
         weightsChangesInToHidOne = new double[hiddenOneLayerSize][inputLayerSize];
         weightsChangesHidOneToHidTwo = new double[hiddenTwoLayerSize][hiddenOneLayerSize];
         weightsChangesHidTwoToOut = new double[outputLayerSize][hiddenTwoLayerSize];
@@ -147,5 +153,10 @@ public class NeuralNetwork implements Serializable {
                 weights[i][j] += means[i][j];
             }
         }
+    }
+
+    private void readObject(ObjectInputStream ois) throws Exception {
+        ois.defaultReadObject();
+        initialize();
     }
 }
