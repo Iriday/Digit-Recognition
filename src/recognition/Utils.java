@@ -33,6 +33,16 @@ public class Utils {
         return result;
     }
 
+    public static double[][] replaceValuesWith(double[][] input, double lower, double upper, boolean skipLast) {
+        int val = skipLast ? 1 : 0;
+        for (int i = 0; i < input.length; i++) {
+            for (int j = 0; j < input[i].length - val; j++) {
+                input[i][j] = input[i][j] <= 0 ? lower : upper;
+            }
+        }
+        return input;
+    }
+
     // activation functions
     public static double sigmoid(double val) {
         return 1.0 / (1.0 + Math.pow(Math.E, -val));
