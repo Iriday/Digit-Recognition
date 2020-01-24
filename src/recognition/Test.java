@@ -23,19 +23,20 @@ public class Test {
         double[] networkResponse; //output layer
         int expectedOutputMax;
         int actualOutputMax;
+        double correct = 0.0;
 
         for (int testSample = 0; testSample < inputTest.length; testSample++) {
             networkResponse = neuralNetwork.forwardPass(inputTest[testSample]);
 
-            expectedOutputMax = Utils.max(outputTest[testSample]);
+            int numberIndex = (int) inputTest[testSample][inputTest[testSample].length - 1];
+            expectedOutputMax = Utils.max(outputTest[numberIndex]);
             actualOutputMax = Utils.max(networkResponse);
 
             if (expectedOutputMax == actualOutputMax) {
-                System.out.println("ok: " + expectedOutputMax);
-            } else {
-                System.out.printf("Error, expected result: %d, actual: %d\n", expectedOutputMax, actualOutputMax);
+                correct++; //System.out.println("ok: " + expectedOutputMax);
             }
-
         }
+
+        System.out.println("The network prediction accuracy: " + (int)correct + "/" + inputTest.length + ", " + Math.round(correct / inputTest.length * 100.0) + "%");
     }
 }

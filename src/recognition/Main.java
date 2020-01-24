@@ -15,8 +15,9 @@ import java.util.stream.Collectors;
 public class Main {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    private final double[] testSample = new double[15]; //input layer
+    private double[] testSample = new double[28 * 28 + 1]; //input layer
     private double[] neuralNetworkResponse = new double[10]; //output layer
+    private double[][] trainingData;
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         Main main = new Main();
@@ -24,6 +25,8 @@ public class Main {
     }
 
     private void run() throws IOException, ClassNotFoundException {
+        trainingData = Utils.replaceValuesWith(TrainingData.fromDirectory("MNIST", 28 * 28 + 1), 0, 1, true);
+
         input();
 
         NeuralNetwork neuralNetwork = (NeuralNetwork) SerializationUtils.deserializeObject(".\\data.txt");
@@ -36,10 +39,10 @@ public class Main {
         String input;
 
         while (true) {
-            System.out.println("1. Learn the network");
-            System.out.println("2. Guess a number");
+            System.out.println("1. Learn the network\n2. Guess all the numbers\n3. Guess number from text file");
+
             input = reader.readLine();
-            if (!(input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4"))) {
+            if (!(input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4") || input.equals("5"))) {
                 System.out.println("Incorrect input, try again");
             } else {
                 break;
@@ -52,25 +55,29 @@ public class Main {
                 System.out.print("Enter the sizes of the layers: ");
                 List<Integer> sizes = Arrays.stream(reader.readLine().split("\\s+")).map(Integer::parseInt).collect(Collectors.toList());
                 System.out.println();
-                NeuralNetwork neuralNetwork = new NeuralNetwork(15, sizes.get(1), sizes.get(2), 10, TrainingData.trainingInputNumbersGrid5x3, TrainingData.trainingOutputNumbersGrid5x3);
+                NeuralNetwork neuralNetwork = new NeuralNetwork(784, sizes.get(1), sizes.get(2), 10, trainingData, TrainingData.trainingOutputNumbersGrid5x3);
                 neuralNetwork.run();
                 input();
                 return;
             case "2":
-                System.out.println("Input grid:");
+                System.out.println("Guessing...");
+                Test.run(trainingData, TrainingData.trainingOutputNumbersGrid5x3);
+                // System.out.println("Starting additional test");
+                //Test.run(Test.inputTest2_NumbersGrid5x3, TrainingData.trainingOutputNumbersGrid5x3);
+                input();
+                break;
+            case "3":
+                System.out.print("Enter filename: ");
+                testSample = testSampleFromFile(reader.readLine());
+                break;
+            case "4":
+                System.out.println("Input grid: ");
                 if (initializeTestSample() == false) {
                     System.out.println("Invalid input, grid size should be 5x3");
                     input();
                 }
                 break;
-            case "3":
-                System.out.println("Starting main test");
-                Test.run(TrainingData.trainingInputNumbersGrid5x3, TrainingData.trainingOutputNumbersGrid5x3);
-                System.out.println("Starting additional test");
-                Test.run(Test.inputTest2_NumbersGrid5x3, TrainingData.trainingOutputNumbersGrid5x3);
-                input();
-                break;
-            case "4":
+            case "5":
                 System.exit(0);
         }
     }
@@ -94,15 +101,18 @@ public class Main {
         String inputLine;
         int testSampleIndex = 0;
 
-        for (int i = 0; i < 5; i++) {
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher;
+        for (int i = 0; i < 28; i++) {
             inputLine = reader.readLine();
+            matcher = pattern.matcher(inputLine);
 
-            if (inputLine.length() != 3) {
-                return false;
-            } else {
-                for (int j = 0; j < inputLine.length(); j++) {
-                    testSample[testSampleIndex++] = inputLine.charAt(j) == 'X' || inputLine.charAt(j) == 'x' ? 1.0 : 0.0/*-1.0*/;
+            while (matcher.find()) {
+                if (testSampleIndex == 28 * 28) {
+                    testSample[testSampleIndex] = Integer.parseInt(matcher.group());
+                    break;
                 }
+                testSample[testSampleIndex++] = Integer.parseInt(matcher.group()) == 0 ? 0 : 1;
             }
         }
         return true;

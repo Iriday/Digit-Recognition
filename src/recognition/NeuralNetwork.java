@@ -5,8 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 public class NeuralNetwork implements Serializable {
-    private static final double learningRateCoefficient = 0.5;//n
-    private int generation = 1;
+    private static final double learningRateCoefficient = 0.01;//n
+    private int generation = 0;
     private final int inputLayerSize, hiddenOneLayerSize, hiddenTwoLayerSize, outputLayerSize;                        //layers sizes
 
     private transient final double[][] trainingInput, trainingOutput;                                                 //training data
@@ -51,30 +51,31 @@ public class NeuralNetwork implements Serializable {
         Utils.fillWithRandomGaussianValues(weightsHidOneToHidTwo);
         Utils.fillWithRandomGaussianValues(weightsHidTwoToOut);
 
-        while (generation != 5000) {
+        while (generation != 200) {//->->-
 
             for (int trainingSample = 0; trainingSample < trainingInput.length; trainingSample++) {
                 forwardPass(trainingInput[trainingSample]);
 
-                calculateDeltasOutputLayer(trainingOutput[trainingSample], neuronsOutputLayer, deltasOutputLayer);
+                int numberIndex = (int) trainingInput[trainingSample][trainingInput[trainingSample].length - 1];
+                calculateDeltasOutputLayer(trainingOutput[numberIndex], neuronsOutputLayer, deltasOutputLayer);
                 calculateDeltasHiddenLayer(neuronsHiddenTwoLayer, deltasHiddenTwoLayer, weightsHidTwoToOut, deltasOutputLayer);
                 calculateDeltasHiddenLayer(neuronsHiddenOneLayer, deltasHiddenOneLayer, weightsHidOneToHidTwo, deltasHiddenTwoLayer);
 
-                calculateWeightsChanges(neuronsHiddenTwoLayer, weightsChangesHidTwoToOut, deltasOutputLayer);
-                calculateWeightsChanges(neuronsHiddenOneLayer, weightsChangesHidOneToHidTwo, deltasHiddenTwoLayer);
-                calculateWeightsChanges(neuronsInputLayer, weightsChangesInToHidOne, deltasHiddenOneLayer);
+                calculateWeightsChanges(neuronsHiddenTwoLayer, weightsHidTwoToOut, deltasOutputLayer);
+                calculateWeightsChanges(neuronsHiddenOneLayer, weightsHidOneToHidTwo, deltasHiddenTwoLayer);
+                calculateWeightsChanges(neuronsInputLayer, weightsInToHidOne, deltasHiddenOneLayer);
 
                 deltasHiddenOneLayer = new double[hiddenOneLayerSize];
                 deltasHiddenTwoLayer = new double[hiddenTwoLayerSize];
             }
-            updateWeights(weightsInToHidOne, weightsChangesInToHidOne);
-            updateWeights(weightsHidOneToHidTwo, weightsChangesHidOneToHidTwo);
-            updateWeights(weightsHidTwoToOut, weightsChangesHidTwoToOut);
+            //updateWeights(weightsInToHidOne, weightsChangesInToHidOne);
+            //updateWeights(weightsHidOneToHidTwo, weightsChangesHidOneToHidTwo);
+            //updateWeights(weightsHidTwoToOut, weightsChangesHidTwoToOut);
             generation++;
-
-            weightsChangesInToHidOne = new double[hiddenOneLayerSize][inputLayerSize];
-            weightsChangesHidOneToHidTwo = new double[hiddenTwoLayerSize][hiddenOneLayerSize];
-            weightsChangesHidTwoToOut = new double[outputLayerSize][hiddenTwoLayerSize];
+            System.out.println("Generation: " + generation);
+            //weightsChangesInToHidOne = new double[hiddenOneLayerSize][inputLayerSize];
+            //weightsChangesHidOneToHidTwo = new double[hiddenTwoLayerSize][hiddenOneLayerSize];
+            //weightsChangesHidTwoToOut = new double[outputLayerSize][hiddenTwoLayerSize];
         }
         SerializationUtils.serializeObject(this, ".\\data.txt");
 
@@ -83,7 +84,7 @@ public class NeuralNetwork implements Serializable {
 
     public double[] forwardPass(double[] trainingInputSample) {
         //input layer
-        neuronsInputLayer = trainingInputSample;
+        System.arraycopy(trainingInputSample, 0, neuronsInputLayer, 0, trainingInputSample.length - 1);//neuronsInputLayer = trainingInputSample;
         //hidden one layer
         activateNextLayerNeurons(neuronsInputLayer, weightsInToHidOne, neuronsHiddenOneLayer, bias);
         //hidden two layer
