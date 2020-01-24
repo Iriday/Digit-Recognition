@@ -3,8 +3,13 @@ package recognition;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -68,6 +73,21 @@ public class Main {
             case "4":
                 System.exit(0);
         }
+    }
+
+    public static double[] testSampleFromFile(String filePath) throws IOException {
+        List<String> list = new ArrayList<>();
+        double[] testSample;
+        String sampleData = Files.readString(Path.of(filePath));
+        Matcher matcher = Pattern.compile("\\d+\\.\\d+|\\d+").matcher(sampleData);
+        while (matcher.find()) {
+            list.add(matcher.group());
+        }
+        testSample = new double[list.size()];
+        for (int i = 0; i < testSample.length; i++) {
+            testSample[i] = Double.parseDouble(list.get(i));
+        }
+        return testSample;
     }
 
     private boolean initializeTestSample() throws IOException {
