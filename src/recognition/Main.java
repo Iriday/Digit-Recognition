@@ -15,9 +15,10 @@ import java.util.stream.Collectors;
 public class Main {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    private double[] testSample = new double[28 * 28 + 1]; //input layer
-    private double[] neuralNetworkResponse = new double[10]; //output layer
-    private double[][] trainingData;
+    private double[] testSample; //input layer
+    private double[] neuralNetworkResponse; //output layer
+    private double[][] trainingInput;
+    private int inputLayerSizePlusDefinition; //input layer size +1
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         Main main = new Main();
@@ -25,8 +26,6 @@ public class Main {
     }
 
     private void run() throws IOException, ClassNotFoundException {
-        trainingData = Utils.replaceValuesWith(TrainingData.fromDirectory("MNIST", 28 * 28 + 1), 0, 1, true);
-
         input();
 
         NeuralNetwork neuralNetwork = (NeuralNetwork) SerializationUtils.deserializeObject(".\\data.txt");
@@ -56,20 +55,30 @@ public class Main {
                 List<Integer> sizes = Arrays.stream(reader.readLine().split("\\s+")).map(Integer::parseInt).collect(Collectors.toList());
                 System.out.print("Max generation: ");
                 int maxGeneration = Integer.parseInt(reader.readLine());
-                NeuralNetwork neuralNetwork = new NeuralNetwork(784, sizes.get(1), sizes.get(2), 10, trainingData, TrainingData.trainingOutputNumbersGrid5x3, maxGeneration);
+
+                inputLayerSizePlusDefinition = sizes.get(0) + 1;
+                System.out.println("Initializing training input");
+                trainingInput = Utils.replaceValuesWith(TrainingData.fromDirectory("MNIST", inputLayerSizePlusDefinition), 0, 1, true);
+                System.out.println("Initialized");
+                testSample = new double[inputLayerSizePlusDefinition];
+
+                NeuralNetwork neuralNetwork = new NeuralNetwork(sizes.get(0), sizes.get(1), sizes.get(2), 10, trainingInput, TrainingData.trainingOutputNumbersGrid5x3, maxGeneration);
                 neuralNetwork.run();
+
                 input();
-                return;
+                break;
             case "2":
                 System.out.println("Guessing...");
-                Test.run(trainingData, TrainingData.trainingOutputNumbersGrid5x3);
+                Test.run(trainingInput, TrainingData.trainingOutputNumbersGrid5x3);
                 // System.out.println("Starting additional test");
                 //Test.run(Test.inputTest2_NumbersGrid5x3, TrainingData.trainingOutputNumbersGrid5x3);
+
                 input();
                 break;
             case "3":
                 System.out.print("Enter filename: ");
                 testSample = testSampleFromFile(reader.readLine());
+
                 break;
             case "4":
                 System.out.println("Input grid: ");
@@ -77,6 +86,7 @@ public class Main {
                     System.out.println("Invalid input, grid size should be 5x3");
                     input();
                 }
+
                 break;
             case "5":
                 System.exit(0);
