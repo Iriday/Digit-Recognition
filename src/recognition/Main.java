@@ -39,7 +39,7 @@ public class Main {
         String input;
 
         while (true) {
-            System.out.println("1. Learn the network\n2. Guess all the numbers\n3. Guess number from text file");
+            System.out.println("1. Learn the network\n2. Guess all the numbers\n3. Guess number from text file\n4. Guess number from console\n5. Exit");
 
             input = reader.readLine();
             if (!(input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4") || input.equals("5"))) {
