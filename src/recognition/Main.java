@@ -63,8 +63,10 @@ public class Main {
                     String input2 = reader.readLine();
                     switch (input2) {
                         case "1":
+                            System.out.print("Enter directory path: ");
+                            String directoryPath = reader.readLine();
                             System.out.println("Initializing training input...");
-                            trainingInput = Utils.replaceValuesWith(TrainingData.fromDirectory("MNIST", inputLayerSizePlusDefinition), 0, 1, true);
+                            trainingInput = Utils.replaceValuesWith(TrainingData.fromDirectory(directoryPath, inputLayerSizePlusDefinition), 0, 1, true);
                             System.out.println("Initialized");
                             on = false;
                             break;
