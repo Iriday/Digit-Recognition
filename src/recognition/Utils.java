@@ -55,4 +55,13 @@ public class Utils {
     public static double deltaRule(double learningRateCoefficient, double neuron, double idealOutput, double actualOutput) { //Δw(ai,aj)=η∗ai∗(a ideal j −aj)
         return learningRateCoefficient * neuron * (idealOutput - actualOutput);
     }
+
+    //for neural network with two layers
+    private void applyDeltaRule(double learningRate, double[] neurons, double[] idealOutput, double[] actualOutput, double[][] temp) {
+        for (int i = 0; i < temp.length; i++) {
+            for (int j = 0; j < temp[0].length; j++) {
+                temp[i][j] += Utils.deltaRule(learningRate, neurons[j], idealOutput[i], actualOutput[i]);
+            }
+        }
+    }
 }

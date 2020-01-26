@@ -131,23 +131,14 @@ public class NeuralNetwork implements Serializable {
         }
     }
 
-    /* //for neural network with two layers
-        private void applyDeltaRule(double[] neurons, double[] idealOutput, double[] actualOutput, double[][] temp) {
-            for (int i = 0; i < temp.length; i++) {
-                for (int j = 0; j < temp[0].length; j++) {
-                    temp[i][j] += Utils.deltaRule(learningRateCoefficient, neurons[j], idealOutput[i], actualOutput[i]);
-                }
+    private void mean(double[][] sums, int val) { //val= training samples length
+        for (int i = 0; i < sums.length; i++) {
+            for (int j = 0; j < sums[0].length; j++) {
+                sums[i][j] = sums[i][j] / val;
             }
         }
+    }
 
-        private void mean(double[][] sums ,int val) { //val= training samples length
-            for (int i = 0; i < sums.length; i++) {
-                for (int j = 0; j < sums[0].length; j++) {
-                    sums[i][j] = sums[i][j] / val;
-                }
-            }
-        }
-       */
     private void updateWeights(double[][] weights, double[][] means) {
         for (int i = 0; i < weights.length; i++) {
             for (int j = 0; j < weights[0].length; j++) {
