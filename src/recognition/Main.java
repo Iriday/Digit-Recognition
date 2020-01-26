@@ -55,11 +55,34 @@ public class Main {
                 List<Integer> sizes = Arrays.stream(reader.readLine().split("\\s+")).map(Integer::parseInt).collect(Collectors.toList());
                 System.out.print("Max generation: ");
                 int maxGeneration = Integer.parseInt(reader.readLine());
-
                 inputLayerSizePlusDefinition = sizes.get(0) + 1;
-                System.out.println("Initializing training input");
-                trainingInput = Utils.replaceValuesWith(TrainingData.fromDirectory("MNIST", inputLayerSizePlusDefinition), 0, 1, true);
-                System.out.println("Initialized");
+
+                boolean on = true;
+                while (on) {
+                    System.out.println("1. Initialize training input\n2. Use previous training input\n3. Return");
+                    String input2 = reader.readLine();
+                    switch (input2) {
+                        case "1":
+                            System.out.println("Initializing training input...");
+                            trainingInput = Utils.replaceValuesWith(TrainingData.fromDirectory("MNIST", inputLayerSizePlusDefinition), 0, 1, true);
+                            System.out.println("Initialized");
+                            on = false;
+                            break;
+                        case "2":
+                            if (trainingInput != null) {
+                                System.out.println("Using previous training input");
+                                on = false;
+                            } else {
+                                System.out.println("Error, data is not initialized");
+                            }
+                            break;
+                        case "3":
+                            input();
+                            break;
+                        default:
+                            System.out.println("Incorrect input, try again");
+                    }
+                }
                 testSample = new double[inputLayerSizePlusDefinition];
 
                 NeuralNetwork neuralNetwork = new NeuralNetwork(sizes.get(0), sizes.get(1), sizes.get(2), 10, trainingInput, TrainingData.trainingOutputNumbersGrid5x3, maxGeneration);
