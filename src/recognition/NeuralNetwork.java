@@ -5,8 +5,9 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 public class NeuralNetwork implements Serializable {
-    private static final double learningRateCoefficient = 0.01;//n
+    private final double learningRateCoefficient = 0.01;//n
     private int generation = 0;
+    private final int maxGeneration;
     private final int inputLayerSize, hiddenOneLayerSize, hiddenTwoLayerSize, outputLayerSize;                        //layers sizes
 
     private transient final double[][] trainingInput, trainingOutput;                                                 //training data
@@ -16,13 +17,14 @@ public class NeuralNetwork implements Serializable {
     private transient double[] deltasHiddenOneLayer, deltasHiddenTwoLayer, deltasOutputLayer;                         //deltas
     private final double bias = 1;
 
-    public NeuralNetwork(int inputLayerSize, int hiddenOneLayerSize, int hiddenTwoLayerSize, int outputLayerSize, double[][] trainingInput, double[][] trainingOutput) {
+    public NeuralNetwork(int inputLayerSize, int hiddenOneLayerSize, int hiddenTwoLayerSize, int outputLayerSize, double[][] trainingInput, double[][] trainingOutput, int maxGeneration) {
         this.inputLayerSize = inputLayerSize;
         this.hiddenOneLayerSize = hiddenOneLayerSize;
         this.hiddenTwoLayerSize = hiddenTwoLayerSize;
         this.outputLayerSize = outputLayerSize;
         this.trainingInput = trainingInput;
         this.trainingOutput = trainingOutput;
+        this.maxGeneration = maxGeneration;
 
         weightsInToHidOne = new double[hiddenOneLayerSize][inputLayerSize];
         weightsHidOneToHidTwo = new double[hiddenTwoLayerSize][hiddenOneLayerSize];
@@ -51,7 +53,7 @@ public class NeuralNetwork implements Serializable {
         Utils.fillWithRandomGaussianValues(weightsHidOneToHidTwo);
         Utils.fillWithRandomGaussianValues(weightsHidTwoToOut);
 
-        while (generation != 200) {//->->-
+        while (generation < maxGeneration) {
 
             for (int trainingSample = 0; trainingSample < trainingInput.length; trainingSample++) {
                 forwardPass(trainingInput[trainingSample]);

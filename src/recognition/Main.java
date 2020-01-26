@@ -54,8 +54,9 @@ public class Main {
             case "1":
                 System.out.print("Enter the sizes of the layers: ");
                 List<Integer> sizes = Arrays.stream(reader.readLine().split("\\s+")).map(Integer::parseInt).collect(Collectors.toList());
-                System.out.println();
-                NeuralNetwork neuralNetwork = new NeuralNetwork(784, sizes.get(1), sizes.get(2), 10, trainingData, TrainingData.trainingOutputNumbersGrid5x3);
+                System.out.print("Max generation: ");
+                int maxGeneration = Integer.parseInt(reader.readLine());
+                NeuralNetwork neuralNetwork = new NeuralNetwork(784, sizes.get(1), sizes.get(2), 10, trainingData, TrainingData.trainingOutputNumbersGrid5x3, maxGeneration);
                 neuralNetwork.run();
                 input();
                 return;
