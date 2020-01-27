@@ -59,7 +59,7 @@ public class Main {
 
                 boolean on = true;
                 while (on) {
-                    System.out.println("1. Initialize training input\n2. Use previous training input\n3. Return");
+                    System.out.println("1. Initialize training input\n2. Use previous training input\n3. Use builtin(numbers 5x3)\n4. Return");
                     String input2 = reader.readLine();
                     switch (input2) {
                         case "1":
@@ -79,6 +79,10 @@ public class Main {
                             }
                             break;
                         case "3":
+                            on = false;
+                            trainingInput = TrainingData.trainingInputNumbersGrid5x3;
+                            break;
+                        case "4":
                             input();
                             break;
                         default:
@@ -87,16 +91,16 @@ public class Main {
                 }
                 testSample = new double[inputLayerSizePlusDefinition];
 
-                NeuralNetwork neuralNetwork = new NeuralNetwork(sizes.get(0), sizes.get(1), sizes.get(2), 10, trainingInput, TrainingData.trainingOutputNumbersGrid5x3, maxGeneration);
+                NeuralNetwork neuralNetwork = new NeuralNetwork(sizes.get(0), sizes.get(1), sizes.get(2), 10, trainingInput, TrainingData.trainingOutputNumbers, maxGeneration);
                 neuralNetwork.run();
 
                 input();
                 break;
             case "2":
                 System.out.println("Guessing...");
-                Test.run(trainingInput, TrainingData.trainingOutputNumbersGrid5x3);
+                Test.run(trainingInput, TrainingData.trainingOutputNumbers);
                 // System.out.println("Starting additional test");
-                //Test.run(Test.inputTest2_NumbersGrid5x3, TrainingData.trainingOutputNumbersGrid5x3);
+                //Test.run(TrainingData.inputTest2_NumbersGrid5x3, TrainingData.trainingOutputNumbers);
 
                 input();
                 break;
