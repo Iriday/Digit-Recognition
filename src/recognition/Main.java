@@ -53,8 +53,10 @@ public class Main {
             case "1":
                 System.out.print("Enter the sizes of the layers: ");
                 List<Integer> sizes = Arrays.stream(reader.readLine().split("\\s+")).map(Integer::parseInt).collect(Collectors.toList());
-                System.out.print("Max generation: ");
-                int maxGeneration = Integer.parseInt(reader.readLine());
+                System.out.print("Enter max generation: ");
+                int maxGeneration = Integer.parseInt(reader.readLine().trim());
+                System.out.print("Enter learning rate: ");
+                double learningRate = Double.parseDouble(reader.readLine().trim());
                 inputLayerSizePlusDefinition = sizes.get(0) + 1;
 
                 boolean on = true;
@@ -91,7 +93,7 @@ public class Main {
                 }
                 testSample = new double[inputLayerSizePlusDefinition];
 
-                NeuralNetwork neuralNetwork = new NeuralNetwork(sizes.get(0), sizes.get(1), sizes.get(2), 10, trainingInput, TrainingData.trainingOutputNumbers, maxGeneration);
+                NeuralNetwork neuralNetwork = new NeuralNetwork(sizes.get(0), sizes.get(1), sizes.get(2), 10, trainingInput, TrainingData.trainingOutputNumbers, maxGeneration, learningRate);
                 neuralNetwork.run();
 
                 input();

@@ -5,7 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 public class NeuralNetwork implements Serializable {
-    private final double learningRateCoefficient = 0.01;//n
+    private double learningRateCoefficient = 0.01;//n
     private int generation = 0;
     private final int maxGeneration;
     private final int inputLayerSize, hiddenOneLayerSize, hiddenTwoLayerSize, outputLayerSize;                        //layers sizes
@@ -17,7 +17,7 @@ public class NeuralNetwork implements Serializable {
     private transient double[] deltasHiddenOneLayer, deltasHiddenTwoLayer, deltasOutputLayer;                         //deltas
     private final double bias = 1;
 
-    public NeuralNetwork(int inputLayerSize, int hiddenOneLayerSize, int hiddenTwoLayerSize, int outputLayerSize, double[][] trainingInput, double[][] trainingOutput, int maxGeneration) {
+    public NeuralNetwork(int inputLayerSize, int hiddenOneLayerSize, int hiddenTwoLayerSize, int outputLayerSize, double[][] trainingInput, double[][] trainingOutput, int maxGeneration, double learningRate) {
         this.inputLayerSize = inputLayerSize;
         this.hiddenOneLayerSize = hiddenOneLayerSize;
         this.hiddenTwoLayerSize = hiddenTwoLayerSize;
@@ -25,6 +25,7 @@ public class NeuralNetwork implements Serializable {
         this.trainingInput = trainingInput;
         this.trainingOutput = trainingOutput;
         this.maxGeneration = maxGeneration;
+        this.learningRateCoefficient = learningRate;
 
         weightsInToHidOne = new double[hiddenOneLayerSize][inputLayerSize];
         weightsHidOneToHidTwo = new double[hiddenTwoLayerSize][hiddenOneLayerSize];
