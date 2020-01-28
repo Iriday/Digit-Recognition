@@ -37,126 +37,142 @@ public class Main {
     }
 
     private void input() throws IOException, ClassNotFoundException {
-        String input;
+        System.out.println("0. Initialize training data\n1. Learn the network\n2. Guess all the numbers\n3. Guess number from text file\n4. Guess number from console\n5. Exit");
 
-        while (true) {
-            System.out.println("0. Initialize training data\n1. Learn the network\n2. Guess all the numbers\n3. Guess number from text file\n4. Guess number from console\n5. Exit");
-
-            input = reader.readLine();
-            if (!(input.equals("0") || input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4") || input.equals("5"))) {
-                System.out.println("Incorrect input, try again");
-            } else {
-                break;
-            }
-        }
+        String input = reader.readLine();
         System.out.println("Your choice: " + input);
 
         switch (input) {
             case "0":
-                boolean on = true;
-                while (on) {
-                    System.out.println("1. Initialize training input from directory\n2. Initialize training output from directory\n3. Use builtin training input(numbers 5x3 grid)\n4. Use builtin training output(numbers 0-9)\n5. Return");
-                    String input2 = reader.readLine();
-
-                    switch (input2) {
-                        case "1":
-                            System.out.print("Enter directory path: ");
-                            String trainingInDirectoryPath = reader.readLine().trim();
-
-                            System.out.print("Enter input layer size: ");
-                            inputLayerSizePlusDefinition = Integer.parseInt(reader.readLine().trim()) + 1;
-                            testSample = new double[inputLayerSizePlusDefinition];
-
-                            System.out.println("Initializing training input...");
-                            trainingInput = Utils.replaceValuesWith(TrainingData.fromDirectory(trainingInDirectoryPath, inputLayerSizePlusDefinition), 0, 1, true);
-                            System.out.println("Initialized");
-
-                            break;
-                        case "2":
-                            System.out.print("Enter directory path: ");
-                            String trainingOutDirectoryPath = reader.readLine().trim();
-
-                            System.out.print("Enter output layer size: ");
-                            outputLayerSize = Integer.parseInt(reader.readLine().trim());
-
-                            System.out.println("Initializing training output...");
-                            trainingOutput = TrainingData.fromDirectory(trainingOutDirectoryPath, outputLayerSize);
-                            System.out.println("Initialized");
-
-                            break;
-                        case "3":
-                            trainingInput = TrainingData.trainingInputNumbersGrid5x3;
-                            inputLayerSizePlusDefinition = trainingInput[0].length; //5x3(15) +1
-                            testSample = new double[inputLayerSizePlusDefinition];
-                            System.out.println("Using builtin training input");
-
-                            break;
-                        case "4":
-                            trainingOutput = TrainingData.trainingOutputNumbers;
-                            outputLayerSize = trainingOutput.length; //10 (numbers)
-                            System.out.println("Using builtin training output");
-
-                            break;
-                        case "5":
-                            on = false;
-
-                            break;
-                        default:
-                            System.out.println("Incorrect input, try again");
-                    }
-                }
-
-                input();
+                actionZero();
                 break;
             case "1":
-                System.out.print("Enter the sizes of 2 hidden layers: ");
-                List<Integer> sizes = Arrays.stream(reader.readLine().split("\\s+")).map(Integer::parseInt).collect(Collectors.toList());
-                if (sizes.size() != 2) {
-                    System.out.println("Incorrect number of arguments");
-                    input();
-                    break;
-                }
-                for (int s : sizes) {
-                    if (s < 1) {
-                        System.out.println("Incorrect input, layer size should be >0");
-                        input();
-                        break;
-                    }
-                }
-                System.out.print("Enter max generation: ");
-                int maxGeneration = Integer.parseInt(reader.readLine().trim());
-                System.out.print("Enter learning rate: ");
-                double learningRate = Double.parseDouble(reader.readLine().trim());
-
-                NeuralNetwork neuralNetwork = new NeuralNetwork(inputLayerSizePlusDefinition - 1, sizes.get(0), sizes.get(1), outputLayerSize, trainingInput, trainingOutput, maxGeneration, learningRate);
-                neuralNetwork.run();
-
-                input();
+                actionOne();
                 break;
             case "2":
-                System.out.println("Guessing...");
-                Test.run(trainingInput, trainingOutput);
-                // System.out.println("Starting additional test");
-                //Test.run(TrainingData.inputTest2_NumbersGrid5x3, TrainingData.trainingOutputNumbers);
-
-                input();
+                actionTwo();
                 break;
             case "3":
-                System.out.print("Enter filename: ");
-                testSample = testSampleFromFile(reader.readLine());
-
+                actionThree();
                 break;
             case "4":
-                System.out.println("Input grid: ");
-                if (initializeTestSample() == false) {
-                    System.out.println("Invalid input, grid size should be 5x3");
-                    input();
-                }
-
+                actionFour();
                 break;
             case "5":
-                System.exit(0);
+                actionFive();
+                break;
+            default:
+                System.out.println("Incorrect input, try again");
+                input();
         }
+    }
+
+    private void actionZero() throws IOException, ClassNotFoundException {
+        boolean on = true;
+        while (on) {
+            System.out.println("1. Initialize training input from directory\n2. Initialize training output from directory\n3. Use builtin training input(numbers 5x3 grid)\n4. Use builtin training output(numbers 0-9)\n5. Return");
+            String input2 = reader.readLine();
+
+            switch (input2) {
+                case "1":
+                    System.out.print("Enter directory path: ");
+                    String trainingInDirectoryPath = reader.readLine().trim();
+
+                    System.out.print("Enter input layer size: ");
+                    inputLayerSizePlusDefinition = Integer.parseInt(reader.readLine().trim()) + 1;
+                    testSample = new double[inputLayerSizePlusDefinition];
+
+                    System.out.println("Initializing training input...");
+                    trainingInput = Utils.replaceValuesWith(TrainingData.fromDirectory(trainingInDirectoryPath, inputLayerSizePlusDefinition), 0, 1, true);
+                    System.out.println("Initialized");
+
+                    break;
+                case "2":
+                    System.out.print("Enter directory path: ");
+                    String trainingOutDirectoryPath = reader.readLine().trim();
+
+                    System.out.print("Enter output layer size: ");
+                    outputLayerSize = Integer.parseInt(reader.readLine().trim());
+
+                    System.out.println("Initializing training output...");
+                    trainingOutput = TrainingData.fromDirectory(trainingOutDirectoryPath, outputLayerSize);
+                    System.out.println("Initialized");
+
+                    break;
+                case "3":
+                    trainingInput = TrainingData.trainingInputNumbersGrid5x3;
+                    inputLayerSizePlusDefinition = trainingInput[0].length; //5x3(15) +1
+                    testSample = new double[inputLayerSizePlusDefinition];
+                    System.out.println("Using builtin training input");
+
+                    break;
+                case "4":
+                    trainingOutput = TrainingData.trainingOutputNumbers;
+                    outputLayerSize = trainingOutput.length; //10 (numbers)
+                    System.out.println("Using builtin training output");
+
+                    break;
+                case "5":
+                    on = false;
+
+                    break;
+                default:
+                    System.out.println("Incorrect input, try again");
+            }
+        }
+
+        input();
+    }
+
+    private void actionOne() throws IOException, ClassNotFoundException {
+        System.out.print("Enter the sizes of 2 hidden layers: ");
+        List<Integer> sizes = Arrays.stream(reader.readLine().split("\\s+")).map(Integer::parseInt).collect(Collectors.toList());
+        if (sizes.size() != 2) {
+            System.out.println("Incorrect number of arguments");
+            input();
+            return;
+        }
+        for (int s : sizes) {
+            if (s < 1) {
+                System.out.println("Incorrect input, layer size should be >0");
+                input();
+                return;
+            }
+        }
+        System.out.print("Enter max generation: ");
+        int maxGeneration = Integer.parseInt(reader.readLine().trim());
+        System.out.print("Enter learning rate: ");
+        double learningRate = Double.parseDouble(reader.readLine().trim());
+
+        NeuralNetwork neuralNetwork = new NeuralNetwork(inputLayerSizePlusDefinition - 1, sizes.get(0), sizes.get(1), outputLayerSize, trainingInput, trainingOutput, maxGeneration, learningRate);
+        neuralNetwork.run();
+
+        input();
+    }
+
+    private void actionTwo() throws IOException, ClassNotFoundException {
+        System.out.println("Guessing...");
+        Test.run(trainingInput, trainingOutput);
+        // System.out.println("Starting additional test");
+        //Test.run(TrainingData.inputTest2_NumbersGrid5x3, TrainingData.trainingOutputNumbers);
+        input();
+    }
+
+    private void actionThree() throws IOException {
+        System.out.print("Enter filename: ");
+        testSample = testSampleFromFile(reader.readLine());
+    }
+
+    private void actionFour() throws IOException, ClassNotFoundException {
+        System.out.println("Input grid: ");
+        if (initializeTestSample() == false) {
+            System.out.println("Invalid input, grid size should be 5x3");
+            input();
+        }
+    }
+
+    private void actionFive() {
+        System.exit(0);
     }
 
     public static double[] testSampleFromFile(String filePath) throws IOException {
