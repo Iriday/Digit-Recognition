@@ -38,10 +38,10 @@ public class Main {
         String input;
 
         while (true) {
-            System.out.println("1. Learn the network\n2. Guess all the numbers\n3. Guess number from text file\n4. Guess number from console\n5. Exit");
+            System.out.println("0. Initialize training data\n1. Learn the network\n2. Guess all the numbers\n3. Guess number from text file\n4. Guess number from console\n5. Exit");
 
             input = reader.readLine();
-            if (!(input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4") || input.equals("5"))) {
+            if (!(input.equals("0") || input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4") || input.equals("5"))) {
                 System.out.println("Incorrect input, try again");
             } else {
                 break;
@@ -50,6 +50,43 @@ public class Main {
         System.out.println("Your choice: " + input);
 
         switch (input) {
+            case "0":
+                boolean on = true;
+                while (on) {
+                    System.out.println("1. Initialize training input from directory\n2. Use builtin training input(numbers 5x3 grid)\n3. Return");
+                    String input2 = reader.readLine();
+                    switch (input2) {
+                        case "1":
+                            System.out.print("Enter directory path: ");
+                            String directoryPath = reader.readLine();
+
+                            System.out.print("Enter input layer size: ");
+                            inputLayerSizePlusDefinition = Integer.parseInt(reader.readLine().trim()) + 1;
+                            testSample = new double[inputLayerSizePlusDefinition];
+
+                            System.out.println("Initializing training input...");
+                            trainingInput = Utils.replaceValuesWith(TrainingData.fromDirectory(directoryPath, inputLayerSizePlusDefinition), 0, 1, true);
+                            System.out.println("Initialized");
+
+                            on = false;
+                            break;
+                        case "2":
+                            on = false;
+                            trainingInput = TrainingData.trainingInputNumbersGrid5x3;
+                            inputLayerSizePlusDefinition = trainingInput[0].length;
+                            testSample = new double[inputLayerSizePlusDefinition];
+                            break;
+                        case "3":
+                            on = false;
+                            input();
+                            break;
+                        default:
+                            System.out.println("Incorrect input, try again");
+                    }
+                }
+
+                input();
+                break;
             case "1":
                 System.out.print("Enter the sizes of the layers: ");
                 List<Integer> sizes = Arrays.stream(reader.readLine().split("\\s+")).map(Integer::parseInt).collect(Collectors.toList());
@@ -57,43 +94,8 @@ public class Main {
                 int maxGeneration = Integer.parseInt(reader.readLine().trim());
                 System.out.print("Enter learning rate: ");
                 double learningRate = Double.parseDouble(reader.readLine().trim());
-                inputLayerSizePlusDefinition = sizes.get(0) + 1;
 
-                boolean on = true;
-                while (on) {
-                    System.out.println("1. Initialize training input\n2. Use previous training input\n3. Use builtin(numbers 5x3)\n4. Return");
-                    String input2 = reader.readLine();
-                    switch (input2) {
-                        case "1":
-                            System.out.print("Enter directory path: ");
-                            String directoryPath = reader.readLine();
-                            System.out.println("Initializing training input...");
-                            trainingInput = Utils.replaceValuesWith(TrainingData.fromDirectory(directoryPath, inputLayerSizePlusDefinition), 0, 1, true);
-                            System.out.println("Initialized");
-                            on = false;
-                            break;
-                        case "2":
-                            if (trainingInput != null) {
-                                System.out.println("Using previous training input");
-                                on = false;
-                            } else {
-                                System.out.println("Error, data is not initialized");
-                            }
-                            break;
-                        case "3":
-                            on = false;
-                            trainingInput = TrainingData.trainingInputNumbersGrid5x3;
-                            break;
-                        case "4":
-                            input();
-                            break;
-                        default:
-                            System.out.println("Incorrect input, try again");
-                    }
-                }
-                testSample = new double[inputLayerSizePlusDefinition];
-
-                NeuralNetwork neuralNetwork = new NeuralNetwork(sizes.get(0), sizes.get(1), sizes.get(2), 10, trainingInput, TrainingData.trainingOutputNumbers, maxGeneration, learningRate);
+                NeuralNetwork neuralNetwork = new NeuralNetwork(inputLayerSizePlusDefinition - 1, sizes.get(1), sizes.get(2), 10, trainingInput, TrainingData.trainingOutputNumbers, maxGeneration, learningRate);
                 neuralNetwork.run();
 
                 input();
