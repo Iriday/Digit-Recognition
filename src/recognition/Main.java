@@ -111,6 +111,18 @@ public class Main {
             case "1":
                 System.out.print("Enter the sizes of 2 hidden layers: ");
                 List<Integer> sizes = Arrays.stream(reader.readLine().split("\\s+")).map(Integer::parseInt).collect(Collectors.toList());
+                if (sizes.size() != 2) {
+                    System.out.println("Incorrect number of arguments");
+                    input();
+                    break;
+                }
+                for (int s : sizes) {
+                    if (s < 1) {
+                        System.out.println("Incorrect input, layer size should be >0");
+                        input();
+                        break;
+                    }
+                }
                 System.out.print("Enter max generation: ");
                 int maxGeneration = Integer.parseInt(reader.readLine().trim());
                 System.out.print("Enter learning rate: ");
