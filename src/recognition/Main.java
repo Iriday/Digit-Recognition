@@ -160,6 +160,7 @@ public class Main {
         System.out.print("Enter filename: ");
         testSample = testSampleFromFile(reader.readLine());
         processSample();
+        run();
     }
 
     private void actionFour() throws IOException, ClassNotFoundException {
@@ -169,6 +170,7 @@ public class Main {
             run();
         }
         processSample();
+        run();
     }
 
     private void actionFive() {
