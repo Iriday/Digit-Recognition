@@ -28,15 +28,6 @@ public class Main {
     }
 
     private void run() throws IOException, ClassNotFoundException {
-        input();
-
-        NeuralNetwork neuralNetwork = (NeuralNetwork) SerializationUtils.deserializeObject(".\\data.txt");
-        neuralNetworkResponse = neuralNetwork.forwardPass(testSample);
-
-        output(Utils.max(neuralNetworkResponse));
-    }
-
-    private void input() throws IOException, ClassNotFoundException {
         System.out.println("0. Initialize training data\n1. Learn the network\n2. Guess all the numbers\n3. Guess number from text file\n4. Guess number from console\n5. Exit");
 
         String input = reader.readLine();
@@ -63,8 +54,15 @@ public class Main {
                 break;
             default:
                 System.out.println("Incorrect input, try again");
-                input();
+                run();
         }
+    }
+
+    private void processSample() throws IOException, ClassNotFoundException {
+        NeuralNetwork neuralNetwork = (NeuralNetwork) SerializationUtils.deserializeObject(".\\data.txt");
+        neuralNetworkResponse = neuralNetwork.forwardPass(testSample);
+
+        output(Utils.max(neuralNetworkResponse));
     }
 
     private void actionZero() throws IOException, ClassNotFoundException {
@@ -121,7 +119,7 @@ public class Main {
             }
         }
 
-        input();
+        run();
     }
 
     private void actionOne() throws IOException, ClassNotFoundException {
@@ -129,13 +127,13 @@ public class Main {
         List<Integer> sizes = Arrays.stream(reader.readLine().split("\\s+")).map(Integer::parseInt).collect(Collectors.toList());
         if (sizes.size() != 2) {
             System.out.println("Incorrect number of arguments");
-            input();
+            run();
             return;
         }
         for (int s : sizes) {
             if (s < 1) {
                 System.out.println("Incorrect input, layer size should be >0");
-                input();
+                run();
                 return;
             }
         }
@@ -147,7 +145,7 @@ public class Main {
         NeuralNetwork neuralNetwork = new NeuralNetwork(inputLayerSizePlusDefinition - 1, sizes.get(0), sizes.get(1), outputLayerSize, trainingInput, trainingOutput, maxGeneration, learningRate);
         neuralNetwork.run();
 
-        input();
+        run();
     }
 
     private void actionTwo() throws IOException, ClassNotFoundException {
@@ -155,20 +153,22 @@ public class Main {
         Test.run(trainingInput, trainingOutput);
         // System.out.println("Starting additional test");
         //Test.run(TrainingData.inputTest2_NumbersGrid5x3, TrainingData.trainingOutputNumbers);
-        input();
+        run();
     }
 
-    private void actionThree() throws IOException {
+    private void actionThree() throws IOException, ClassNotFoundException {
         System.out.print("Enter filename: ");
         testSample = testSampleFromFile(reader.readLine());
+        processSample();
     }
 
     private void actionFour() throws IOException, ClassNotFoundException {
         System.out.println("Input grid: ");
         if (initializeTestSample() == false) {
             System.out.println("Invalid input, grid size should be 5x3");
-            input();
+            run();
         }
+        processSample();
     }
 
     private void actionFive() {
@@ -211,7 +211,7 @@ public class Main {
         return true;
     }
 
-    private void output(int result) {
+    private static void output(int result) {
         System.out.println("This number is " + result);
     }
 }
