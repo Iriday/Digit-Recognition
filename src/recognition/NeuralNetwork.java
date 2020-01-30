@@ -57,7 +57,10 @@ public class NeuralNetwork implements Serializable {
         while (generation < maxGeneration) {
 
             for (int trainingSample = 0; trainingSample < trainingInput.length; trainingSample++) {
-                forwardPass(trainingInput[trainingSample]);
+
+                System.arraycopy(trainingInput[trainingSample], 0, neuronsInputLayer, 0, trainingInput[trainingSample].length - 1);//do not copy last index(contains definition)
+
+                forwardPass(neuronsInputLayer);
 
                 int numberIndex = (int) trainingInput[trainingSample][trainingInput[trainingSample].length - 1];
                 calculateDeltasOutputLayer(trainingOutput[numberIndex], neuronsOutputLayer, deltasOutputLayer);
@@ -85,9 +88,8 @@ public class NeuralNetwork implements Serializable {
         System.out.println("Done! Saved to the file.");
     }
 
-    public double[] forwardPass(double[] trainingInputSample) {
-        //input layer
-        System.arraycopy(trainingInputSample, 0, neuronsInputLayer, 0, trainingInputSample.length - 1);//neuronsInputLayer = trainingInputSample;
+    public double[] forwardPass(double[] neuronsInputLayer) {
+
         //hidden one layer
         activateNextLayerNeurons(neuronsInputLayer, weightsInToHidOne, neuronsHiddenOneLayer, bias);
         //hidden two layer
