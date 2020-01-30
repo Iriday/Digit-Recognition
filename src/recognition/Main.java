@@ -14,7 +14,6 @@ public class Main {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     private double[] testSample; //input layer
-    private double[] neuralNetworkResponse; //output layer
     private double[][] trainingInput;
     private double[][] trainingOutput;
     private int inputLayerSize;
@@ -58,11 +57,9 @@ public class Main {
         }
     }
 
-    private void processSample() throws IOException, ClassNotFoundException {
+    private double[] processSample(double[] sample) throws IOException, ClassNotFoundException {//sample =inputLayer
         NeuralNetwork neuralNetwork = (NeuralNetwork) SerializationUtils.deserializeObject(".\\data.txt");
-        neuralNetworkResponse = neuralNetwork.forwardPass(testSample);
-
-        output(Utils.max(neuralNetworkResponse));
+        return neuralNetwork.forwardPass(sample); //returns output layer (neural network response)
     }
 
     private void actionZero() throws IOException {
@@ -157,7 +154,8 @@ public class Main {
             System.out.println("Something went wrong");
             return;
         }
-        processSample();
+
+        output(Utils.max(processSample(testSample)));
     }
 
     private void actionFour() throws IOException, ClassNotFoundException {
@@ -168,7 +166,8 @@ public class Main {
             System.out.println("Error, incorrect input");
             return;
         }
-        processSample();
+
+        output(Utils.max(processSample(testSample)));
     }
 
     private void actionFive() {
