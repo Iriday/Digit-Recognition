@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -159,8 +160,10 @@ public class Main {
 
     private void actionFour() throws IOException, ClassNotFoundException {
         System.out.println("Input grid: ");
-        if (initializeTestSample() == false) {
-            System.out.println("Invalid input, grid size should be 5x3");
+        try {
+            testSampleFromConsole(testSample);
+        } catch (NumberFormatException e) {
+            System.out.println("Error, incorrect input");
             return;
         }
         processSample();
@@ -185,25 +188,14 @@ public class Main {
         return testSample;
     }
 
-    private boolean initializeTestSample() throws IOException {
-        String inputLine;
-        int testSampleIndex = 0;
+    public static double[] testSampleFromConsole(double[] sample) throws NumberFormatException {
+        Scanner scn = new Scanner(System.in);
 
-        Pattern pattern = Pattern.compile("\\d+");
-        Matcher matcher;
-        for (int i = 0; i < 28; i++) {
-            inputLine = reader.readLine();
-            matcher = pattern.matcher(inputLine);
-
-            while (matcher.find()) {
-                if (testSampleIndex == 28 * 28) {
-                    testSample[testSampleIndex] = Integer.parseInt(matcher.group());
-                    break;
-                }
-                testSample[testSampleIndex++] = Integer.parseInt(matcher.group()) == 0 ? 0 : 1;
-            }
+        for (int i = 0; i < sample.length; i++) {
+            String next = scn.next();
+            sample[i] = Double.parseDouble(next);
         }
-        return true;
+        return sample;
     }
 
     private static void output(int result) {
