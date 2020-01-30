@@ -5,12 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -154,7 +151,12 @@ public class Main {
 
     private void actionThree() throws IOException, ClassNotFoundException {
         System.out.print("Enter filename: ");
-        testSample = testSampleFromFile(reader.readLine());
+        try {
+            testSampleFromFile(testSample, reader.readLine());
+        } catch (Exception e) {
+            System.out.println("Something went wrong");
+            return;
+        }
         processSample();
     }
 
@@ -173,19 +175,20 @@ public class Main {
         System.exit(0);
     }
 
-    public static double[] testSampleFromFile(String filePath) throws IOException {
-        List<String> list = new ArrayList<>();
-        double[] testSample;
+    public static double[] testSampleFromFile(double[] sample, String filePath) throws IOException, IllegalArgumentException {
+        if (sample.length == 0) {
+            throw new IllegalArgumentException();
+        }
         String sampleData = Files.readString(Path.of(filePath));
-        Matcher matcher = Pattern.compile("\\d+\\.\\d+|\\d+").matcher(sampleData);
-        while (matcher.find()) {
-            list.add(matcher.group());
+        String[] values = sampleData.split("[\\s,]+");
+
+        if (values.length < sample.length) {
+            throw new IOException("File has incorrect data");
         }
-        testSample = new double[list.size()];
-        for (int i = 0; i < testSample.length; i++) {
-            testSample[i] = Double.parseDouble(list.get(i));
+        for (int i = 0; i < sample.length; i++) {
+            sample[i] = Double.parseDouble(values[i]);
         }
-        return testSample;
+        return sample;
     }
 
     public static double[] testSampleFromConsole(double[] sample) throws NumberFormatException {
