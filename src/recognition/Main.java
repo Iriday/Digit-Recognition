@@ -19,12 +19,12 @@ public class Main {
     private int inputLayerSize;
     private int outputLayerSize;
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    public static void main(String[] args) throws IOException {
         Main main = new Main();
         main.run();
     }
 
-    private void run() throws IOException, ClassNotFoundException {
+    private void run() throws IOException {
         boolean on = true;
         while (on) {
             System.out.println("0. Initialize training data\n1. Learn the network\n2. Guess all the numbers\n3. Guess number from text file\n4. Guess number from console\n5. Exit");
@@ -139,14 +139,18 @@ public class Main {
         neuralNetwork.run();
     }
 
-    private void actionTwo() throws IOException, ClassNotFoundException {
+    private void actionTwo() {
         System.out.println("Guessing...");
-        Test.run(trainingInput, trainingOutput);
-        //System.out.println("Starting additional test");
-        //Test.run(TrainingData.inputTest2_NumbersGrid5x3, trainingOutput);
+        try {
+            Test.run(trainingInput, trainingOutput);
+            //System.out.println("Starting additional test");
+            //Test.run(TrainingData.inputTest2_NumbersGrid5x3, trainingOutput);
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error, something went wrong during deserialization");
+        }
     }
 
-    private void actionThree() throws IOException, ClassNotFoundException {
+    private void actionThree() {
         System.out.print("Enter filename: ");
         try {
             testSampleFromFile(testSample, reader.readLine());
@@ -154,11 +158,14 @@ public class Main {
             System.out.println("Something went wrong");
             return;
         }
-
-        output(Utils.max(processSample(testSample)));
+        try {
+            output(Utils.max(processSample(testSample)));
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error, something went wrong during deserialization");
+        }
     }
 
-    private void actionFour() throws IOException, ClassNotFoundException {
+    private void actionFour() {
         System.out.println("Input grid: ");
         try {
             testSampleFromConsole(testSample);
@@ -166,8 +173,11 @@ public class Main {
             System.out.println("Error, incorrect input");
             return;
         }
-
-        output(Utils.max(processSample(testSample)));
+        try {
+            output(Utils.max(processSample(testSample)));
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error, something went wrong during deserialization");
+        }
     }
 
     private void actionFive() {
