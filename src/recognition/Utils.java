@@ -1,6 +1,10 @@
 package recognition;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Utils {
     private static final Random rand = new Random();
@@ -19,6 +23,32 @@ public class Utils {
             }
         }
         return input;
+    }
+
+    public static double[] testSampleFromFile(double[] sample, String filePath) throws IOException, IllegalArgumentException {
+        if (sample.length == 0) {
+            throw new IllegalArgumentException();
+        }
+        String sampleData = Files.readString(Path.of(filePath));
+        String[] values = sampleData.split("[\\s,]+");
+
+        if (values.length < sample.length) {
+            throw new IOException("File has incorrect data");
+        }
+        for (int i = 0; i < sample.length; i++) {
+            sample[i] = Double.parseDouble(values[i]);
+        }
+        return sample;
+    }
+
+    public static double[] testSampleFromConsole(double[] sample) throws NumberFormatException {
+        Scanner scn = new Scanner(System.in);
+
+        for (int i = 0; i < sample.length; i++) {
+            String next = scn.next();
+            sample[i] = Double.parseDouble(next);
+        }
+        return sample;
     }
 
     public static int max(double[] outputLayer) { //result

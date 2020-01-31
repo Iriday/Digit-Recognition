@@ -3,12 +3,12 @@ package recognition;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
+
+import static recognition.Utils.testSampleFromConsole;
+import static recognition.Utils.testSampleFromFile;
 
 public class Main {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -182,32 +182,6 @@ public class Main {
 
     private void actionFive() {
         System.exit(0);
-    }
-
-    public static double[] testSampleFromFile(double[] sample, String filePath) throws IOException, IllegalArgumentException {
-        if (sample.length == 0) {
-            throw new IllegalArgumentException();
-        }
-        String sampleData = Files.readString(Path.of(filePath));
-        String[] values = sampleData.split("[\\s,]+");
-
-        if (values.length < sample.length) {
-            throw new IOException("File has incorrect data");
-        }
-        for (int i = 0; i < sample.length; i++) {
-            sample[i] = Double.parseDouble(values[i]);
-        }
-        return sample;
-    }
-
-    public static double[] testSampleFromConsole(double[] sample) throws NumberFormatException {
-        Scanner scn = new Scanner(System.in);
-
-        for (int i = 0; i < sample.length; i++) {
-            String next = scn.next();
-            sample[i] = Double.parseDouble(next);
-        }
-        return sample;
     }
 
     private static void output(int result) {
