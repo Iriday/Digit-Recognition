@@ -18,41 +18,52 @@ public class Main {
     private double[][] trainingOutput;
     private int inputLayerSize;
     private int outputLayerSize;
+    private boolean trainingInputInitialized = false;
+    private boolean trainingOutputInitialized = false;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Main main = new Main();
         main.run();
     }
 
-    private void run() throws IOException {
+    private void run() {
         boolean on = true;
         while (on) {
-            System.out.println("0. Initialize training data\n1. Learn the network\n2. Guess all the numbers\n3. Guess number from text file\n4. Guess number from console\n5. Exit");
+            try {
+                System.out.println("0. Initialize training data\n1. Learn the network\n2. Guess all the numbers\n3. Guess number from text file\n4. Guess number from console\n5. Exit");
 
-            String input = reader.readLine();
-            System.out.println("Your choice: " + input);
+                String input = reader.readLine();
+                System.out.println("Your choice: " + input);
 
-            switch (input) {
-                case "0":
-                    actionZero();
-                    break;
-                case "1":
-                    actionOne();
-                    break;
-                case "2":
-                    actionTwo();
-                    break;
-                case "3":
-                    actionThree();
-                    break;
-                case "4":
-                    actionFour();
-                    break;
-                case "5":
-                    actionFive();
-                    break;
-                default:
-                    System.out.println("Incorrect input, try again");
+                switch (input) {
+                    case "0":
+                        actionZero();
+                        break;
+                    case "1":
+                        if (!(trainingInputInitialized && trainingOutputInitialized)) {
+                            System.out.println("Error, you have to initialize training data first (you can use builtin).");
+                            continue;
+                        }
+                        actionOne();
+                        break;
+                    case "2":
+                        actionTwo();
+                        break;
+                    case "3":
+                        actionThree();
+                        break;
+                    case "4":
+                        actionFour();
+                        break;
+                    case "5":
+                        actionFive();
+                        break;
+                    default:
+                        System.out.println("Incorrect input, try again");
+                }
+            } catch (Exception e) {
+                System.out.println("Error, something went wrong.");
+                System.out.println("Error message: " + e.getMessage());
             }
         }
     }
@@ -79,6 +90,7 @@ public class Main {
 
                     System.out.println("Initializing training input...");
                     trainingInput = Utils.replaceValuesWith(TrainingData.fromDirectory(trainingInDirectoryPath, inputLayerSize + 1 /*plusDefinition*/), 0, 1, true);
+                    trainingInputInitialized = true;
                     System.out.println("Initialized");
 
                     break;
@@ -91,6 +103,7 @@ public class Main {
 
                     System.out.println("Initializing training output...");
                     trainingOutput = TrainingData.fromDirectory(trainingOutDirectoryPath, outputLayerSize);
+                    trainingOutputInitialized = true;
                     System.out.println("Initialized");
 
                     break;
@@ -98,12 +111,14 @@ public class Main {
                     trainingInput = TrainingData.trainingInputNumbersGrid5x3;
                     inputLayerSize = trainingInput[0].length - 1; //5x3+1=16  -1(definition) =15
                     testSample = new double[inputLayerSize];
+                    trainingInputInitialized = true;
                     System.out.println("Using builtin training input");
 
                     break;
                 case "4":
                     trainingOutput = TrainingData.trainingOutputNumbers;
                     outputLayerSize = trainingOutput.length; //10 (numbers)
+                    trainingOutputInitialized = true;
                     System.out.println("Using builtin training output");
 
                     break;
