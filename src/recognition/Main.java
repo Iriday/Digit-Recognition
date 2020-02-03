@@ -20,6 +20,8 @@ public class Main {
     private int outputLayerSize;
     private boolean trainingInputInitialized = false;
     private boolean trainingOutputInitialized = false;
+    private boolean usingBuiltinTrIn = false;
+    private boolean usingBuiltinTrOut = false;
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -105,6 +107,7 @@ public class Main {
                     System.out.println("Initializing training input...");
                     trainingInput = Utils.replaceValuesWith(TrainingData.fromDirectory(trainingInDirectoryPath, inputLayerSize + 1 /*plusDefinition*/), 0, 1, true);
                     trainingInputInitialized = true;
+                    usingBuiltinTrIn = false;
                     System.out.println("Initialized");
 
                     break;
@@ -118,6 +121,7 @@ public class Main {
                     System.out.println("Initializing training output...");
                     trainingOutput = TrainingData.fromDirectory(trainingOutDirectoryPath, outputLayerSize);
                     trainingOutputInitialized = true;
+                    usingBuiltinTrOut = false;
                     System.out.println("Initialized");
 
                     break;
@@ -126,6 +130,7 @@ public class Main {
                     inputLayerSize = trainingInput[0].length - 1; //5x3+1=16  -1(definition) =15
                     testSample = new double[inputLayerSize];
                     trainingInputInitialized = true;
+                    usingBuiltinTrIn = true;
                     System.out.println("Using builtin training input");
 
                     break;
@@ -133,6 +138,7 @@ public class Main {
                     trainingOutput = TrainingData.trainingOutputNumbers;
                     outputLayerSize = trainingOutput.length; //10 (numbers)
                     trainingOutputInitialized = true;
+                    usingBuiltinTrOut = true;
                     System.out.println("Using builtin training output");
 
                     break;
@@ -172,8 +178,10 @@ public class Main {
         System.out.println("Guessing...");
         try {
             Test.run(trainingInput, trainingOutput);
-            //System.out.println("Starting additional test");
-            //Test.run(TrainingData.inputTest2_NumbersGrid5x3, trainingOutput);
+            if (usingBuiltinTrIn && usingBuiltinTrOut) {
+                System.out.println("Starting additional test");
+                Test.run(TrainingData.inputTest2_NumbersGrid5x3, trainingOutput);
+            }
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Error, something went wrong during deserialization");
         }
