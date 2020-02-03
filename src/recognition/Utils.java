@@ -41,7 +41,19 @@ public class Utils {
         return sample;
     }
 
-    public static double[] testSampleFromConsole(double[] sample) throws NumberFormatException {
+    /**
+     * Reads (array.length) double (or float, int, short, byte) elements from console, and fills specified array with these elements.
+     *
+     * @param sample array to be filled.
+     * @return filled array.
+     * @throws NullPointerException     if the array is null.
+     * @throws IllegalArgumentException if array.length == 0.
+     * @throws NumberFormatException    if inputted (from console) element is not double (float, int, short, byte).
+     */
+    public static double[] testSampleFromConsole(double[] sample) {
+        if (sample.length == 0) {
+            throw new IllegalArgumentException();
+        }
         Scanner scn = new Scanner(System.in);
 
         for (int i = 0; i < sample.length; i++) {
@@ -51,7 +63,18 @@ public class Utils {
         return sample;
     }
 
-    public static int max(double[] outputLayer) { //result
+    /**
+     * Returns the (first) index of the largest number in an array.
+     *
+     * @param outputLayer array to be processed.
+     * @return the (first) index of the largest number in an array.
+     * @throws NullPointerException     if the array is null.
+     * @throws IllegalArgumentException if array.length == 0.
+     */
+    public static int max(double[] outputLayer) {
+        if (outputLayer.length == 0) {
+            throw new IllegalArgumentException();
+        }
         double max = outputLayer[0];
         int result = 0;
         for (int i = 1; i < outputLayer.length; i++) {
