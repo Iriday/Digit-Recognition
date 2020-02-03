@@ -30,7 +30,14 @@ public class Main {
         boolean on = true;
         while (on) {
             try {
-                System.out.println("0. Initialize training data\n1. Learn the network\n2. Guess all the numbers\n3. Guess number from text file\n4. Guess number from console\n5. Exit");
+                System.out.print("""
+                          0. Initialize training data
+                          1. Learn the network
+                          2. Guess all the numbers
+                          3. Guess number from text file
+                          4. Guess number from console
+                          5. Exit
+                        """);
 
                 String input = reader.readLine();
                 System.out.println("Your choice: " + input);
@@ -76,7 +83,14 @@ public class Main {
     private void actionZero() throws IOException {
         boolean on = true;
         while (on) {
-            System.out.println("1. Initialize training input from directory\n2. Initialize training output from directory\n3. Use builtin training input(numbers 5x3 grid)\n4. Use builtin training output(numbers 0-9)\n5. Return");
+            System.out.print("""
+                        1. Initialize training input from directory
+                        2. Initialize training output from directory
+                        3. Use builtin training input(numbers 5x3 grid)
+                        4. Use builtin training output(numbers 0-9)
+                        5. Return
+                    """);
+
             String input2 = reader.readLine();
 
             switch (input2) {
