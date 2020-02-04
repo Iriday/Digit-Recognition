@@ -87,6 +87,9 @@ public class Utils {
     }
 
     public static double[][] replaceValuesWith(double[][] input, double lower, double upper, boolean skipLast) {
+        if (input.length == 0) {
+            throw new IllegalArgumentException();
+        }
         int val = skipLast ? 1 : 0;
         for (int i = 0; i < input.length; i++) {
             for (int j = 0; j < input[i].length - val; j++) {
