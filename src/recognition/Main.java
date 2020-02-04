@@ -22,6 +22,7 @@ public class Main {
     private boolean trainingOutputInitialized = false;
     private boolean usingBuiltinTrIn = false;
     private boolean usingBuiltinTrOut = false;
+    private boolean learnPerformed = false;
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -29,6 +30,11 @@ public class Main {
     }
 
     private void run() {
+        try {
+            deserialize();
+        } catch (Exception e) {
+        }//first run
+
         boolean on = true;
         while (on) {
             try {
@@ -56,12 +62,24 @@ public class Main {
                         actionOne();
                         break;
                     case "2":
+                        if (!learnPerformed) {
+                            System.out.println("Error, you have to perform learn first");
+                            continue;
+                        }
                         actionTwo();
                         break;
                     case "3":
+                        if (!learnPerformed) {
+                            System.out.println("Error, you have to perform learn first");
+                            continue;
+                        }
                         actionThree();
                         break;
                     case "4":
+                        if (!learnPerformed) {
+                            System.out.println("Error, you have to perform learn first");
+                            continue;
+                        }
                         actionFour();
                         break;
                     case "5":
@@ -109,6 +127,7 @@ public class Main {
                     trainingInputInitialized = true;
                     usingBuiltinTrIn = false;
                     System.out.println("Initialized");
+                    learnPerformed = false;
 
                     break;
                 case "2":
@@ -123,6 +142,7 @@ public class Main {
                     trainingOutputInitialized = true;
                     usingBuiltinTrOut = false;
                     System.out.println("Initialized");
+                    learnPerformed = false;
 
                     break;
                 case "3":
@@ -132,6 +152,7 @@ public class Main {
                     trainingInputInitialized = true;
                     usingBuiltinTrIn = true;
                     System.out.println("Using builtin training input");
+                    learnPerformed = false;
 
                     break;
                 case "4":
@@ -140,6 +161,7 @@ public class Main {
                     trainingOutputInitialized = true;
                     usingBuiltinTrOut = true;
                     System.out.println("Using builtin training output");
+                    learnPerformed = false;
 
                     break;
                 case "5":
@@ -172,6 +194,8 @@ public class Main {
 
         NeuralNetwork neuralNetwork = new NeuralNetwork(inputLayerSize, sizes.get(0), sizes.get(1), outputLayerSize, trainingInput, trainingOutput, maxGeneration, learningRate);
         neuralNetwork.run();
+
+        learnPerformed = true;
     }
 
     private void actionTwo() {
@@ -218,10 +242,28 @@ public class Main {
     }
 
     private void actionFive() {
+        if (learnPerformed) {
+            try {
+                serialize();
+                //System.out.println("Saved");
+            } catch (IOException e) {
+                System.out.println("Something went wrong");
+            }
+        }
         System.exit(0);
     }
 
     private static void output(int result) {
         System.out.println("This number is " + result);
+    }
+
+    private void serialize() throws IOException {
+        SerializationUtils.serializeObject(inputLayerSize, "data2");
+    }
+
+    private void deserialize() throws IOException, ClassNotFoundException {
+        inputLayerSize = (int) SerializationUtils.deserializeObject("data2");
+        testSample = new double[inputLayerSize];
+        learnPerformed = true;
     }
 }
