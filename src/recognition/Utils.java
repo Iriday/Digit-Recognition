@@ -86,6 +86,17 @@ public class Utils {
         return result;
     }
 
+    /**
+     * Replaces all positive values with specified "upper" value, and all negative, and 0 with specified "lower".
+     * If skipLast ==true skips last value (2D) (for example: double[2][3]{{0,1,-2}, {-1,3,4}} if skipLast==true
+     * skips "-2" and "4".
+     *
+     * @param input    array to be processed.
+     * @param skipLast if true skip last value (2D)
+     * @return changed "input" array.
+     * @throws NullPointerException     if the array is null.
+     * @throws IllegalArgumentException if array.length == 0.
+     */
     public static double[][] replaceValuesWith(double[][] input, double lower, double upper, boolean skipLast) {
         if (input.length == 0) {
             throw new IllegalArgumentException();

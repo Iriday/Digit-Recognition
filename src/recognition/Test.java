@@ -21,7 +21,7 @@ public class Test {
             actualOutputMax = Utils.max(networkResponse);
 
             if (expectedOutputMax == actualOutputMax) {
-                correct++; //System.out.println("ok: " + expectedOutputMax);
+                correct++;
             }
         }
 
