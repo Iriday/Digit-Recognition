@@ -6,7 +6,7 @@ public class Test {
 
     public static void run(double[][] inputTest, double[][] outputTest) throws IOException, ClassNotFoundException {
 
-        NeuralNetwork neuralNetwork = (NeuralNetwork) SerializationUtils.deserializeObject(".\\data.txt");
+        NeuralNetwork neuralNetwork = (NeuralNetwork) SerializationUtils.deserializeObject("src/recognition/config/NNData.txt");
 
         double[] networkResponse; //output layer
         int expectedOutputMax;

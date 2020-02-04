@@ -83,7 +83,7 @@ public class NeuralNetwork implements Serializable {
             //weightsChangesHidOneToHidTwo = new double[hiddenTwoLayerSize][hiddenOneLayerSize];
             //weightsChangesHidTwoToOut = new double[outputLayerSize][hiddenTwoLayerSize];
         }
-        SerializationUtils.serializeObject(this, ".\\data.txt");
+        SerializationUtils.serializeObject(this, "src/recognition/config/NNData.txt");
 
         System.out.println("Done! Saved to the file.");
     }

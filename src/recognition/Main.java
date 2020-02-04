@@ -96,7 +96,7 @@ public class Main {
     }
 
     private double[] processSample(double[] sample) throws IOException, ClassNotFoundException {//sample =inputLayer
-        NeuralNetwork neuralNetwork = (NeuralNetwork) SerializationUtils.deserializeObject(".\\data.txt");
+        NeuralNetwork neuralNetwork = (NeuralNetwork) SerializationUtils.deserializeObject("src/recognition/config/NNData.txt");
         return neuralNetwork.forwardPass(sample); //returns output layer (neural network response)
     }
 
@@ -258,11 +258,11 @@ public class Main {
     }
 
     private void serialize() throws IOException {
-        SerializationUtils.serializeObject(inputLayerSize, "data2");
+        SerializationUtils.serializeObject(inputLayerSize, "src/recognition/config/MData.txt");
     }
 
     private void deserialize() throws IOException, ClassNotFoundException {
-        inputLayerSize = (int) SerializationUtils.deserializeObject("data2");
+        inputLayerSize = (int) SerializationUtils.deserializeObject("src/recognition/config/MData.txt");
         testSample = new double[inputLayerSize];
         learnPerformed = true;
     }
