@@ -62,7 +62,7 @@ public class Main {
                         actionOne();
                         break;
                     case "2":
-                        if (!learnPerformed) {
+                        if (!learnPerformed | !trainingInputInitialized | !trainingOutputInitialized) {
                             System.out.println("Error, you have to perform learn first");
                             continue;
                         }
