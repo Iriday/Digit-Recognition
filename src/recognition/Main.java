@@ -13,6 +13,8 @@ import static recognition.Utils.testSampleFromFile;
 public class Main {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
+    private final String serPathNN = "src/recognition/config/NNData.txt";
+    private final String serPathM = "src/recognition/config/MData.txt";
     private double[] testSample; //input layer
     private double[][] trainingInput;
     private double[][] trainingOutput;
@@ -96,7 +98,7 @@ public class Main {
     }
 
     private double[] processSample(double[] sample) throws IOException, ClassNotFoundException {//sample =inputLayer
-        NeuralNetwork neuralNetwork = (NeuralNetwork) SerializationUtils.deserializeObject("src/recognition/config/NNData.txt");
+        NeuralNetwork neuralNetwork = (NeuralNetwork) SerializationUtils.deserializeObject(serPathNN);
         return neuralNetwork.forwardPass(sample); //returns output layer (neural network response)
     }
 
@@ -193,7 +195,17 @@ public class Main {
         double learningRate = Double.parseDouble(reader.readLine().trim());
 
         NeuralNetwork neuralNetwork = new NeuralNetwork(inputLayerSize, sizes.get(0), sizes.get(1), outputLayerSize, trainingInput, trainingOutput, maxGeneration, learningRate);
+        System.out.println("Learning...");
         neuralNetwork.run();
+
+        try {
+            SerializationUtils.serializeObject(neuralNetwork, serPathNN);
+            serialize();
+            System.out.println("Done! Saved to the file.");
+        } catch (IOException e) {
+            System.out.println("Error, something went wrong during serialization");
+            return;
+        }
 
         learnPerformed = true;
     }
@@ -242,14 +254,6 @@ public class Main {
     }
 
     private void actionFive() {
-        if (learnPerformed) {
-            try {
-                serialize();
-                //System.out.println("Saved");
-            } catch (IOException e) {
-                System.out.println("Something went wrong");
-            }
-        }
         System.exit(0);
     }
 
@@ -258,11 +262,11 @@ public class Main {
     }
 
     private void serialize() throws IOException {
-        SerializationUtils.serializeObject(inputLayerSize, "src/recognition/config/MData.txt");
+        SerializationUtils.serializeObject(inputLayerSize, serPathM);
     }
 
     private void deserialize() throws IOException, ClassNotFoundException {
-        inputLayerSize = (int) SerializationUtils.deserializeObject("src/recognition/config/MData.txt");
+        inputLayerSize = (int) SerializationUtils.deserializeObject(serPathM);
         testSample = new double[inputLayerSize];
         learnPerformed = true;
     }

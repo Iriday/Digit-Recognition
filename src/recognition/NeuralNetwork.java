@@ -1,6 +1,5 @@
 package recognition;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 
@@ -47,8 +46,7 @@ public class NeuralNetwork implements Serializable {
         deltasOutputLayer = new double[outputLayerSize];
     }
 
-    public void run() throws IOException {
-        System.out.println("Learning...");
+    public void run() {
 
         Utils.fillWithRandomGaussianValues(weightsInToHidOne);
         Utils.fillWithRandomGaussianValues(weightsHidOneToHidTwo);
@@ -83,9 +81,6 @@ public class NeuralNetwork implements Serializable {
             //weightsChangesHidOneToHidTwo = new double[hiddenTwoLayerSize][hiddenOneLayerSize];
             //weightsChangesHidTwoToOut = new double[outputLayerSize][hiddenTwoLayerSize];
         }
-        SerializationUtils.serializeObject(this, "src/recognition/config/NNData.txt");
-
-        System.out.println("Done! Saved to the file.");
     }
 
     public double[] forwardPass(double[] neuronsInputLayer) {
