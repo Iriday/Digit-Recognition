@@ -53,42 +53,41 @@ public class Main {
                 System.out.println("Your choice: " + input);
 
                 switch (input) {
-                    case "0":
+                    case "0" -> {
                         actionZero();
-                        break;
-                    case "1":
+                    }
+                    case "1" -> {
                         if (!(trainingInputInitialized && trainingOutputInitialized)) {
                             System.out.println("Error, you have to initialize training data first (you can use builtin).");
                             continue;
                         }
                         actionOne();
-                        break;
-                    case "2":
+                    }
+                    case "2" -> {
                         if (!learnPerformed | !trainingInputInitialized | !trainingOutputInitialized) {
                             System.out.println("Error, you have to perform learn first");
                             continue;
                         }
                         actionTwo();
-                        break;
-                    case "3":
+                    }
+                    case "3" -> {
                         if (!learnPerformed) {
                             System.out.println("Error, you have to perform learn first");
                             continue;
                         }
                         actionThree();
-                        break;
-                    case "4":
+                    }
+                    case "4" -> {
                         if (!learnPerformed) {
                             System.out.println("Error, you have to perform learn first");
                             continue;
                         }
                         actionFour();
-                        break;
-                    case "5":
+                    }
+                    case "5" -> {
                         actionFive();
-                        break;
-                    default:
-                        System.out.println("Incorrect input, try again");
+                    }
+                    default -> System.out.println("Incorrect input, try again");
                 }
             } catch (Exception e) {
                 System.out.println("Error, something went wrong.");
@@ -116,7 +115,7 @@ public class Main {
             String input2 = reader.readLine();
 
             switch (input2) {
-                case "1":
+                case "1" -> {
                     System.out.print("Enter directory path: ");
                     String trainingInDirectoryPath = reader.readLine().trim();
 
@@ -130,9 +129,8 @@ public class Main {
                     usingBuiltinTrIn = false;
                     System.out.println("Initialized");
                     learnPerformed = false;
-
-                    break;
-                case "2":
+                }
+                case "2" -> {
                     System.out.print("Enter directory path: ");
                     String trainingOutDirectoryPath = reader.readLine().trim();
 
@@ -145,9 +143,8 @@ public class Main {
                     usingBuiltinTrOut = false;
                     System.out.println("Initialized");
                     learnPerformed = false;
-
-                    break;
-                case "3":
+                }
+                case "3" -> {
                     trainingInput = TrainingData.trainingInputNumbersGrid5x3;
                     inputLayerSize = trainingInput[0].length - 1; //5x3+1=16  -1(definition) =15
                     testSample = new double[inputLayerSize];
@@ -155,23 +152,18 @@ public class Main {
                     usingBuiltinTrIn = true;
                     System.out.println("Using builtin training input");
                     learnPerformed = false;
-
-                    break;
-                case "4":
+                }
+                case "4" -> {
                     trainingOutput = TrainingData.trainingOutputNumbers;
                     outputLayerSize = trainingOutput.length; //10 (numbers)
                     trainingOutputInitialized = true;
                     usingBuiltinTrOut = true;
                     System.out.println("Using builtin training output");
                     learnPerformed = false;
+                }
+                case "5" -> on = false;
 
-                    break;
-                case "5":
-                    on = false;
-
-                    break;
-                default:
-                    System.out.println("Error, incorrect input");
+                default -> System.out.println("Error, incorrect input");
             }
         }
     }
